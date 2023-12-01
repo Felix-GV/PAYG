@@ -1,20 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import PaypalButton from "../components/paypalButton";
 import "./checkoutPage.css";
 
 const CheckoutPage = () => {
   // State to manage form inputs
   const [formData, setFormData] = useState({
     firstName: "",
-    secondName: "",
+    surname: "",
     email: "",
     address: "",
     cardNumber: "",
     expiryDate: "",
     cvv: "",
+    totalAmount: "100", // Example
   });
 
   // State to track the selected payment option
   const [selectedPayment, setSelectedPayment] = useState(null);
+
+  // State to track whether to show payment information
+  const [showPaymentInfo, setShowPaymentInfo] = useState(false);
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -28,6 +33,14 @@ const CheckoutPage = () => {
   // Handle payment option button click
   const handlePaymentOptionClick = (paymentOption) => {
     setSelectedPayment(paymentOption);
+
+    // If Credit Card is selected, show payment information
+    if (paymentOption === "CreditCard") {
+      setShowPaymentInfo(true);
+    } else {
+      // For other payment options, hide payment information
+      setShowPaymentInfo(false);
+    }
   };
 
   // Handle form submission
@@ -35,6 +48,11 @@ const CheckoutPage = () => {
     e.preventDefault();
     // Perform further processing, e.g., send data to a server for payment processing
     console.log("Form submitted:", formData);
+  };
+
+  // Handle closing payment information
+  const handleClosePaymentInfo = () => {
+    setShowPaymentInfo(false);
   };
 
   const TextInput = ({ label, name, value, onChange, required }) => {
@@ -57,15 +75,10 @@ const CheckoutPage = () => {
       <h2>Checkout</h2>
       <form onSubmit={handleFormSubmit}>
         {/* Payment Information */}
+        <PaypalButton />
         <div>
           <h3>Payment Options</h3>
 
-          {/* PayPal Button */}
-          <ul>
-            <button onClick={() => handlePaymentOptionClick("PayPal")}>
-              PayPal
-            </button>
-          </ul>
           <ul>
             <button onClick={() => handlePaymentOptionClick("PAYG")}>
               PAYG
@@ -77,7 +90,7 @@ const CheckoutPage = () => {
             </button>
           </ul>
         </div>
-        {selectedPayment === "CreditCard" && (
+        {showPaymentInfo && (
           <div>
             <h3>Payment Information</h3>
             <TextInput
@@ -115,6 +128,8 @@ const CheckoutPage = () => {
               onChange={handleInputChange}
               required
             />
+            {/* Button to close payment information */}
+            <button onClick={handleClosePaymentInfo}>Close Payment Info</button>
           </div>
         )}
         {/* Submit Button */}

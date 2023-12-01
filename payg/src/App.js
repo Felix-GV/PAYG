@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import CheckoutPage from "./pages/checkoutPage";
 import "./App.css";
 
