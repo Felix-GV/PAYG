@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./checkoutPage.css";
-import PayPalButton from "../components/paypalButton";
 
 const CheckoutPage = () => {
   // State to manage form inputs
@@ -14,6 +13,9 @@ const CheckoutPage = () => {
     cvv: "",
   });
 
+  // State to track the selected payment option
+  const [selectedPayment, setSelectedPayment] = useState(null);
+
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -21,6 +23,11 @@ const CheckoutPage = () => {
       ...formData,
       [name]: value,
     });
+  };
+
+  // Handle payment option button click
+  const handlePaymentOptionClick = (paymentOption) => {
+    setSelectedPayment(paymentOption);
   };
 
   // Handle form submission
@@ -49,91 +56,67 @@ const CheckoutPage = () => {
     <div>
       <h2>Checkout</h2>
       <form onSubmit={handleFormSubmit}>
-        {/* Billing Information */}
-        <div>
-          <h3>Billing Information</h3>
-          <label>
-            First Name:
-            <input
-              type="text"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-          {/* Add other billing information fields here */}
-        </div>
-
         {/* Payment Information */}
         <div>
           <h3>Payment Options</h3>
 
           {/* PayPal Button */}
           <ul>
-            <button>Paypal</button>
+            <button onClick={() => handlePaymentOptionClick("PayPal")}>
+              PayPal
+            </button>
           </ul>
           <ul>
-            <button>Credit Card</button>
+            <button onClick={() => handlePaymentOptionClick("PAYG")}>
+              PAYG
+            </button>
           </ul>
           <ul>
-            <button>PayasyouGrow</button>
+            <button onClick={() => handlePaymentOptionClick("CreditCard")}>
+              Credit Card
+            </button>
           </ul>
-
-          <h3>Payment Information</h3>
-          <label>
-            First Name:
-            <input
-              type="text"
+        </div>
+        {selectedPayment === "CreditCard" && (
+          <div>
+            <h3>Payment Information</h3>
+            <TextInput
+              label="First Name"
               name="firstName"
               value={formData.firstName}
               onChange={handleInputChange}
               required
             />
-          </label>
-          <label>
-            Surname:
-            <input
-              type="text"
+            <TextInput
+              label="Surname"
               name="surname"
               value={formData.surname}
               onChange={handleInputChange}
               required
             />
-          </label>
-          <label>
-            Card Number:
-            <input
-              type="text"
+            <TextInput
+              label="Card Number"
               name="cardNumber"
               value={formData.cardNumber}
               onChange={handleInputChange}
               required
             />
-          </label>
-          <label>
-            Expiry Date:
-            <input
-              type="text"
+            <TextInput
+              label="Expiry Date"
               name="expiryDate"
               value={formData.expiryDate}
               onChange={handleInputChange}
               required
             />
-          </label>
-          <label>
-            CVV:
-            <input
-              type="text"
+            <TextInput
+              label="CVV"
               name="cvv"
               value={formData.cvv}
               onChange={handleInputChange}
               required
             />
-          </label>
-          {/* Add other payment information fields here */}
-        </div>
-
+          </div>
+        )}
         {/* Submit Button */}
         <div>
           <button type="submit">Place Order</button>
